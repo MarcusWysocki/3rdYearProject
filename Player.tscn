@@ -1,4 +1,4 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://Art/Player/Main Character.png" type="Texture" id=1]
 
@@ -41,6 +41,12 @@ func _physics_process(delta):
 			
 	if (target - position).length() > 5:
 		velocity = move_and_slide(velocity)
+		
+	for i in get_slide_count():
+		var collision = get_slide_collision(i)
+		print(\"Collided with: \", collision.collider.name)
+		if collision.collider.name == \"Enemy\":
+			get_tree().change_scene(\"GAMEOVER.tscn\")
 #	get_input()
 #	velocity = move_and_slide(velocity)"
 
@@ -63,6 +69,9 @@ tracks/0/keys = {
 "update": 1,
 "values": [ 0, 1 ]
 }
+
+[sub_resource type="RectangleShape2D" id=4]
+extents = Vector2( 10, 18 )
 
 [node name="Player" type="KinematicBody2D"]
 collision/safe_margin = 8.0
@@ -93,3 +102,9 @@ zoom = Vector2( 0.5, 0.5 )
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 anims/Idle = SubResource( 3 )
+
+[node name="DetectDeath" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="DetectDeath"]
+position = Vector2( 0, -2 )
+shape = SubResource( 4 )
