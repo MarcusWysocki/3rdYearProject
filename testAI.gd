@@ -1,16 +1,18 @@
 extends KinematicBody2D
 
-export (int) var speed = 25
+export (int) var speed = 21
 export (int) var attack_distance = 120
 
-var motion = Vector2()
-var state = "IDLE"
-var c
-var can_Move = true
+var motion = Vector2() #Initialize mob movement
+var state = "IDLE" #Initialize mob state
+var c #Initialize reference for player character
+var can_Move = true 
+const TIME_PERIOD = 1
+var time = 0
+var angry_sound = false
 
 func _ready():
 	$AnimationPlayer.play("Idle")
-
 
 func _process(delta):
 	
@@ -25,15 +27,21 @@ func _process(delta):
 			set_State("IDLE")
 			
 	if state == "ANGRY":
+		$AnimationPlayer.play("Angry")
+		if angry_sound == false:
+			growl_sound()
 		ANGRY()
+		
 	elif state == "IDLE":
+		angry_sound = false
 		IDLE()
 
 	for i in get_slide_count():
 		var collision = get_slide_collision(i)
 		print("Collided with: ", collision.collider.name)
 		if collision.collider.name == "Player":
-			get_tree().change_scene("GAMEOVER.tscn")
+			if c.get_safety() == false:
+				get_tree().change_scene("GAMEOVER.tscn")
 
 func random():
     randomize()
@@ -45,9 +53,8 @@ func IDLE():
 	motion = move_and_slide(motion)
 
 func ANGRY():
-	$AnimationPlayer.play("Angry")
 	var direction = (c.position - position)
-	motion = direction.normalized()  * speed * 2
+	motion = direction.normalized()  * speed * 3
 #	if motion.x > 0:
 #		$Sprite.flip_h = true
 #	if motion.x < 0:
@@ -63,6 +70,11 @@ func check_dir():
 		$Sprite.flip_h = true
 	if motion.x < 0:
 		$Sprite.flip_h = false
+
+func growl_sound():
+	var sound = get_node("AngryGrowl")
+	sound.play()
+	angry_sound = true
 
 func _on_Timer_timeout():
 	if(can_Move == false):
