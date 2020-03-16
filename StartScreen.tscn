@@ -10,6 +10,7 @@ script = ExtResource( 1 )
 __meta__ = {
 "_edit_lock_": true
 }
+TestCase = "res://Level Maps/Level1.tscn"
 
 [node name="touch_to_start" type="Button" parent="."]
 margin_right = 854.0
