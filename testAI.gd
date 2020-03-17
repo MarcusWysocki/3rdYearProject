@@ -1,6 +1,7 @@
 extends KinematicBody2D
 
-export (int) var speed = 21
+export (int) var idle_speed = 0
+export (int) var attack_speed = 21
 export (int) var attack_distance = 120
 
 var motion = Vector2() #Initialize mob movement
@@ -8,12 +9,12 @@ var state = "IDLE" #Initialize mob state
 var c #Initialize reference for player character
 var can_Move = true 
 const TIME_PERIOD = 1
-var time = 0
 var angry_sound = false
 
 func _ready():
 	$AnimationPlayer.play("Idle")
 
+# warning-ignore:unused_argument
 func _process(delta):
 	
 	c = get_parent().get_node("Player")
@@ -41,24 +42,23 @@ func _process(delta):
 		print("Collided with: ", collision.collider.name)
 		if collision.collider.name == "Player":
 			if c.get_safety() == false:
+# warning-ignore:return_value_discarded
 				get_tree().change_scene("GAMEOVER.tscn")
 
 func random():
     randomize()
     return randi()%21 - 10 # range is -10 to 10
 
+#How Ghost plays in Idle state
 func IDLE():
 	$AnimationPlayer.play("Idle")
 	check_dir()
 	motion = move_and_slide(motion)
 
+#How Ghost plays in Angry state
 func ANGRY():
 	var direction = (c.position - position)
-	motion = direction.normalized()  * speed * 3
-#	if motion.x > 0:
-#		$Sprite.flip_h = true
-#	if motion.x < 0:
-#		$Sprite.flip_h = false
+	motion = direction.normalized()  * attack_speed * 3
 	check_dir()
 	motion = move_and_slide(motion)
 
@@ -79,6 +79,6 @@ func growl_sound():
 func _on_Timer_timeout():
 	if(can_Move == false):
 		can_Move = true
-		motion = Vector2(random(), random()).normalized() * 20
+		motion = Vector2(random(), random()).normalized() * idle_speed
 	else:
 		can_Move = false

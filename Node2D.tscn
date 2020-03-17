@@ -4,9 +4,10 @@
 [ext_resource path="res://Level Maps/FloorTest.tscn" type="PackedScene" id=2]
 [ext_resource path="res://Level Maps/WallsTest.tscn" type="PackedScene" id=3]
 [ext_resource path="res://Ghost.tscn" type="PackedScene" id=4]
-[ext_resource path="res://Elements/LevelCompleter.tscn" type="PackedScene" id=5]
+[ext_resource path="res://Assets/Props/LevelCompleter.tscn" type="PackedScene" id=5]
 [ext_resource path="res://Assets/LightingFinal.png" type="Texture" id=6]
 [ext_resource path="res://Assets/Sound and Music/Music/Alexander Ehlers - Warped.wav" type="AudioStream" id=7]
+
 
 [sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 30, 30 )
