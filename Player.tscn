@@ -40,20 +40,21 @@ func _process(delta):
 func _physics_process(delta):
 	if (target - position).length() >= 100:
 		velocity = (target - position).normalized() * speed * 3
-#		velocity = (target - position).normalized() * speed
+		check_dir()
 		velocity = move_and_slide(velocity)
 	
 	if (target - position).length() < 100 && (target - position).length() >= 50:
 		velocity = (target - position).normalized() * speed * 2
-#		velocity = (target - position).normalized() * speed
+		check_dir()
 		velocity = move_and_slide(velocity)
 	
 	if (target - position).length() < 50 && (target - position).length() > 5:
-		velocity = (target - position).normalized() * speed 
-#		velocity = (target - position).normalized() * speed
+		velocity = (target - position).normalized() * speed
+		check_dir()
 		velocity = move_and_slide(velocity)
 			
 	if (target - position).length() > 5:
+		check_dir()
 		velocity = move_and_slide(velocity)
 	
 	for i in get_slide_count():
@@ -72,7 +73,13 @@ func _on_DetectDeath_area_entered(area):
 
 func _on_DetectDeath_area_exited(area):
 	if area.name == \"SafeZone\":
-		set_safety(false)"
+		set_safety(false)
+
+func check_dir():
+	if velocity.x > 0:
+		$Sprite.flip_h = true
+	if velocity.x < 0:
+		$Sprite.flip_h = false"
 
 [sub_resource type="RectangleShape2D" id=2]
 extents = Vector2( 7, 15 )

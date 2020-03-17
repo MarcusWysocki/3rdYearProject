@@ -1,4 +1,4 @@
-[gd_scene load_steps=29 format=2]
+[gd_scene load_steps=31 format=2]
 
 [ext_resource path="res://Assets/Player/Main Character.png" type="Texture" id=1]
 [ext_resource path="res://Assets/LightingFinal.png" type="Texture" id=2]
@@ -14,6 +14,7 @@
 [ext_resource path="res://Assets/Props/CandleLights/CandleNode.tscn" type="PackedScene" id=12]
 [ext_resource path="res://Assets/Props/CandleLights/CandleBlue.png" type="Texture" id=13]
 [ext_resource path="res://Assets/BlackOutLighting.png" type="Texture" id=14]
+[ext_resource path="res://Assets/Characters/SpiritLady/Spirit.png" type="Texture" id=15]
 
 [sub_resource type="GDScript" id=1]
 script/source = "extends KinematicBody2D
@@ -142,10 +143,10 @@ tracks/0/keys = {
 "values": [ 0, 1, 2, 3, 4, 5, 6 ]
 }
 
-[sub_resource type="RectangleShape2D" id=11]
+[sub_resource type="RectangleShape2D" id=8]
 extents = Vector2( 10, 15 )
 
-[sub_resource type="Animation" id=12]
+[sub_resource type="Animation" id=9]
 resource_name = "Angry"
 length = 0.3
 loop = true
@@ -163,7 +164,7 @@ tracks/0/keys = {
 "values": [ 9, 10 ]
 }
 
-[sub_resource type="Animation" id=13]
+[sub_resource type="Animation" id=10]
 length = 2.0
 loop = true
 step = 0.28
@@ -180,24 +181,26 @@ tracks/0/keys = {
 "values": [ 0, 1, 2, 3, 4, 5, 6 ]
 }
 
-[sub_resource type="RectangleShape2D" id=8]
+[sub_resource type="RectangleShape2D" id=11]
 extents = Vector2( 1, 1 )
 
-[sub_resource type="RectangleShape2D" id=10]
+[sub_resource type="RectangleShape2D" id=12]
 extents = Vector2( 5, 13 )
 
-[sub_resource type="RectangleShape2D" id=14]
+[sub_resource type="RectangleShape2D" id=13]
 extents = Vector2( 5, 13 )
 
-[sub_resource type="OccluderPolygon2D" id=9]
+[sub_resource type="OccluderPolygon2D" id=14]
 closed = false
 cull_mode = 1
 polygon = PoolVector2Array( 364.003, 27.3586, 363.492, -2.26338, 403.533, -2.26338, 403.316, 26.6808 )
 
+[sub_resource type="CapsuleShape2D" id=15]
+height = 30.0
+
 [node name="Level 1" type="Node2D"]
 
 [node name="Player" type="KinematicBody2D" parent="."]
-editor/display_folded = true
 position = Vector2( 380, 60 )
 collision_layer = 3
 collision_mask = 3
@@ -253,6 +256,7 @@ scale = Vector2( 0.7, 0.7 )
 texture = ExtResource( 2 )
 color = Color( 0.780392, 0.752941, 0.686275, 1 )
 energy = 1.1
+shadow_enabled = true
 __meta__ = {
 "_edit_lock_": true
 }
@@ -382,7 +386,7 @@ attack_distance = 200
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Ghost4"]
 z_index = 4
-shape = SubResource( 11 )
+shape = SubResource( 8 )
 __meta__ = {
 "_edit_lock_": true
 }
@@ -397,8 +401,8 @@ __meta__ = {
 }
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="Ghost4"]
-anims/Angry = SubResource( 12 )
-anims/Idle = SubResource( 13 )
+anims/Angry = SubResource( 9 )
+anims/Idle = SubResource( 10 )
 
 [node name="Timer" type="Timer" parent="Ghost4"]
 wait_time = 0.5
@@ -456,7 +460,7 @@ __meta__ = {
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="LevelCompleter"]
 z_index = 4
-shape = SubResource( 8 )
+shape = SubResource( 11 )
 one_way_collision_margin = 0.0
 __meta__ = {
 "_edit_lock_": true
@@ -470,7 +474,6 @@ autoplay = true
 [node name="CandleNode" parent="." instance=ExtResource( 12 )]
 
 [node name="CandleNode2" type="Area2D" parent="."]
-editor/display_folded = true
 position = Vector2( 435.228, 406.946 )
 
 [node name="Sprite" type="Sprite" parent="CandleNode2"]
@@ -482,7 +485,7 @@ __meta__ = {
 [node name="CollisionShape2D" type="CollisionShape2D" parent="CandleNode2"]
 visible = false
 position = Vector2( 0, 0.5 )
-shape = SubResource( 10 )
+shape = SubResource( 12 )
 __meta__ = {
 "_edit_lock_": true
 }
@@ -493,12 +496,12 @@ scale = Vector2( 0.579561, 0.579561 )
 texture = ExtResource( 14 )
 color = Color( 0.298039, 0.588235, 1, 1 )
 energy = 1.2
+shadow_enabled = true
 __meta__ = {
 "_edit_lock_": true
 }
 
 [node name="CandleNode3" type="Area2D" parent="."]
-editor/display_folded = true
 position = Vector2( 487.063, 1188.78 )
 z_index = 11
 
@@ -511,7 +514,7 @@ __meta__ = {
 [node name="CollisionShape2D" type="CollisionShape2D" parent="CandleNode3"]
 visible = false
 position = Vector2( 0, 0.5 )
-shape = SubResource( 14 )
+shape = SubResource( 13 )
 __meta__ = {
 "_edit_lock_": true
 }
@@ -522,13 +525,41 @@ scale = Vector2( 0.579561, 0.579561 )
 texture = ExtResource( 14 )
 color = Color( 0.298039, 0.588235, 1, 1 )
 energy = 1.2
+shadow_enabled = true
 __meta__ = {
 "_edit_lock_": true
 }
 
 [node name="LightOccluder2D" type="LightOccluder2D" parent="."]
 position = Vector2( 0, 1 )
-occluder = SubResource( 9 )
+occluder = SubResource( 14 )
+
+[node name="Spirit" type="Area2D" parent="."]
+position = Vector2( 500.709, 97.069 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Spirit"]
+visible = false
+position = Vector2( 0, 2.754 )
+shape = SubResource( 15 )
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="Sprite" type="Sprite" parent="Spirit"]
+position = Vector2( 4.00551, 0.75103 )
+texture = ExtResource( 15 )
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="Light2D" type="Light2D" parent="Spirit"]
+position = Vector2( 1.67773, 3.59033 )
+scale = Vector2( 0.0354834, 0.0774748 )
+texture = ExtResource( 7 )
+energy = 0.7
+__meta__ = {
+"_edit_lock_": true
+}
 [connection signal="area_entered" from="Player/DetectDeath" to="Player" method="_on_DetectDeath_area_entered"]
 [connection signal="area_exited" from="Player/DetectDeath" to="Player" method="_on_DetectDeath_area_exited"]
 [connection signal="timeout" from="Ghost1/Timer" to="Ghost1" method="_on_Timer_timeout"]
