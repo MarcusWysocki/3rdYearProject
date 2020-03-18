@@ -3,6 +3,7 @@ extends KinematicBody2D
 export (int) var idle_speed = 0
 export (int) var attack_speed = 21
 export (int) var attack_distance = 120
+export (String) var home_name = "None"
 
 var motion = Vector2() #Initialize mob movement
 var state = "IDLE" #Initialize mob state
@@ -10,13 +11,15 @@ var c #Initialize reference for player character
 var can_Move = true 
 const TIME_PERIOD = 1
 var angry_sound = false
+var at_home = true
+var home
 
 func _ready():
 	$AnimationPlayer.play("Idle")
+	home = get_parent().get_node(home_name)
 
 # warning-ignore:unused_argument
 func _process(delta):
-	
 	c = get_parent().get_node("Player")
 	
 	if c.get_safety() == true:
@@ -51,6 +54,9 @@ func random():
 
 #How Ghost plays in Idle state
 func IDLE():
+	if at_home == false:
+		var direction = (home.position - position)
+		motion = direction.normalized() * idle_speed
 	$AnimationPlayer.play("Idle")
 	check_dir()
 	motion = move_and_slide(motion)
@@ -82,3 +88,14 @@ func _on_Timer_timeout():
 		motion = Vector2(random(), random()).normalized() * idle_speed
 	else:
 		can_Move = false
+
+
+func _on_HomeChecker_area_entered(area):
+	if area.name == home_name:
+		at_home = true
+
+
+func _on_HomeChecker_area_exited(area):
+	print(area.name)
+	if area.name == home_name:
+		at_home = false

@@ -1,0 +1,95 @@
+[gd_scene load_steps=8 format=2]
+
+[ext_resource path="res://testAI.gd" type="Script" id=1]
+[ext_resource path="res://Assets/Ghost/FullGhost.png" type="Texture" id=2]
+[ext_resource path="res://Assets/Sound and Music/Sounds/Ghost/shade7.wav" type="AudioStream" id=3]
+
+[sub_resource type="CircleShape2D" id=19]
+radius = 16.8914
+
+[sub_resource type="Animation" id=20]
+resource_name = "Angry"
+length = 0.3
+loop = true
+step = 0.15
+tracks/0/type = "value"
+tracks/0/path = NodePath("Sprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.15 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 1,
+"values": [ 9, 10 ]
+}
+
+[sub_resource type="Animation" id=21]
+length = 2.0
+loop = true
+step = 0.28
+tracks/0/type = "value"
+tracks/0/path = NodePath("Sprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.28, 0.56, 0.84, 1.12, 1.4, 1.68 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1, 1, 1 ),
+"update": 1,
+"values": [ 0, 1, 2, 3, 4, 5, 6 ]
+}
+
+[sub_resource type="CircleShape2D" id=22]
+
+[node name="Ghost" type="KinematicBody2D"]
+z_index = 100
+collision_layer = 6
+collision_mask = 14
+script = ExtResource( 1 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2( -0.377365, 3.77353 )
+z_index = 4
+shape = SubResource( 19 )
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="Sprite" type="Sprite" parent="."]
+texture = ExtResource( 2 )
+vframes = 4
+hframes = 7
+frame = 10
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+anims/Angry = SubResource( 20 )
+anims/Idle = SubResource( 21 )
+
+[node name="Timer" type="Timer" parent="."]
+wait_time = 0.5
+autostart = true
+
+[node name="AngryGrowl" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 3 )
+volume_db = -10.0
+
+[node name="HomeChecker" type="Area2D" parent="."]
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HomeChecker"]
+position = Vector2( 0.37735, 7.16972 )
+shape = SubResource( 22 )
+__meta__ = {
+"_edit_lock_": true
+}
+[connection signal="timeout" from="Timer" to="." method="_on_Timer_timeout"]
+[connection signal="area_entered" from="HomeChecker" to="." method="_on_HomeChecker_area_entered"]
+[connection signal="area_exited" from="HomeChecker" to="." method="_on_HomeChecker_area_exited"]

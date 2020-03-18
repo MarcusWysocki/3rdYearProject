@@ -1,6 +1,7 @@
 extends Control
 
-export (String) var TestCase = "Nothing"
+export (String) var TestCase = "res://Level Maps/Level1.tscn"
 
-func _on_touch_to_start_pressed():
-	get_tree().change_scene(TestCase)# Replace with function body.
+func _input(event):
+	if event is InputEventScreenTouch:
+		get_tree().change_scene(TestCase)
