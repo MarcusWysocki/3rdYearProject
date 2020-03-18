@@ -1,14 +1,17 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=12 format=2]
 
 [ext_resource path="res://Assets/Player/Main Character.png" type="Texture" id=1]
 [ext_resource path="res://Assets/LightingFinal.png" type="Texture" id=2]
 [ext_resource path="res://Assets/Sound and Music/Sounds/Player/238283__meroleroman7__8-bit-noise.wav" type="AudioStream" id=3]
+[ext_resource path="res://Assets/Props/Buttons and joystick/JoystickBase.png" type="Texture" id=4]
+[ext_resource path="res://Assets/Props/Buttons and joystick/JoystickP.png" type="Texture" id=5]
+[ext_resource path="res://Joystick_Button.gd" type="Script" id=6]
 
 [sub_resource type="GDScript" id=1]
 script/source = "extends KinematicBody2D
 
 export (int) var speed = 25
-
+onready var joystick = get_node(\"UI/Joystick/Joystick_Button\")
 
 var target = Vector2(400, 240)
 var velocity = Vector2()
@@ -18,48 +21,18 @@ var safe = false
 
 func _ready():
 	$AnimationPlayer.play(\"Idle\")
+	$SpawnSound.play()
 
 # warning-ignore:unused_argument
 func _process(delta):
-	
-	var sound = get_node(\"SpawnSound\")
-	sound.play()
-#	if safe == true:
-#		print(\"Safe!\")
-#	else:
-#		print(\"Not Safe!\")
+
+	move_and_slide(joystick.get_value() * speed * 3)
 		
 	if Input.is_mouse_button_pressed(1):
 		target = get_global_mouse_position()
 	else:
 		target = position
 		velocity = Vector2(0,0)
-		
-
-# warning-ignore:unused_argument
-func _physics_process(delta):
-	if (target - position).length() >= 100:
-		velocity = (target - position).normalized() * speed * 3
-		check_dir()
-		velocity = move_and_slide(velocity)
-	
-	if (target - position).length() < 100 && (target - position).length() >= 50:
-		velocity = (target - position).normalized() * speed * 2
-		check_dir()
-		velocity = move_and_slide(velocity)
-	
-	if (target - position).length() < 50 && (target - position).length() > 5:
-		velocity = (target - position).normalized() * speed
-		check_dir()
-		velocity = move_and_slide(velocity)
-			
-	if (target - position).length() > 5:
-		check_dir()
-		velocity = move_and_slide(velocity)
-	
-	for i in get_slide_count():
-		var collision = get_slide_collision(i)
-		print(\"Collided with: \", collision.collider.name)
 
 func set_safety(b):
 	safe = b
@@ -103,6 +76,9 @@ tracks/0/keys = {
 
 [sub_resource type="RectangleShape2D" id=4]
 extents = Vector2( 10, 18 )
+
+[sub_resource type="CircleShape2D" id=5]
+radius = 32.0
 
 [node name="Player" type="KinematicBody2D"]
 collision/safe_margin = 8.0
@@ -157,8 +133,23 @@ __meta__ = {
 "_edit_lock_": true
 }
 
-[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+[node name="SpawnSound" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 3 )
 autoplay = true
+
+[node name="UI" type="CanvasLayer" parent="."]
+
+[node name="Joystick" type="Sprite" parent="UI"]
+position = Vector2( 130, 370 )
+scale = Vector2( 2, 2 )
+texture = ExtResource( 4 )
+
+[node name="Joystick_Button" type="TouchScreenButton" parent="UI/Joystick"]
+position = Vector2( -16, -16 )
+scale = Vector2( 0.5, 0.5 )
+normal = ExtResource( 4 )
+pressed = ExtResource( 5 )
+shape = SubResource( 5 )
+script = ExtResource( 6 )
 [connection signal="area_entered" from="DetectDeath" to="." method="_on_DetectDeath_area_entered"]
 [connection signal="area_exited" from="DetectDeath" to="." method="_on_DetectDeath_area_exited"]

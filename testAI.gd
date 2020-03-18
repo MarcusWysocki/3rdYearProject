@@ -16,7 +16,8 @@ var home
 
 func _ready():
 	$AnimationPlayer.play("Idle")
-	home = get_parent().get_node(home_name)
+	if home_name != "None":
+		home = get_parent().get_node(home_name)
 
 # warning-ignore:unused_argument
 func _process(delta):
